@@ -1,0 +1,9 @@
+*.html
+*.o
+*.plt
+*.so
+.erlang.mk/
+c_src/env.mk
+deps/
+ebin/
+luke.d
