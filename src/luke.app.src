@@ -1,0 +1,12 @@
+{application, luke, [
+    {description, "Post-quantum Key Exchange: A New Hope."},
+    {vsn, "1.0.0"},
+    {modules, []},
+    {registered, []},
+    {applications, [
+        kernel,
+        stdlib
+    ]}
+]}.
+
+%% vim: set ft=erlang :
