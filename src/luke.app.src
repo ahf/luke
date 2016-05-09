@@ -1,6 +1,6 @@
 {application, luke, [
     {description, "Post-quantum Key Exchange: A New Hope."},
-    {vsn, "1.0.0"},
+    {vsn, "1.2.0"},
     {modules, []},
     {registered, []},
     {applications, [
