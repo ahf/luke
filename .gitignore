@@ -2,6 +2,7 @@
 *.o
 *.plt
 *.so
+.rebar3/
 _build/
 deps/
 ebin/
