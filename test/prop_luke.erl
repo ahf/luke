@@ -12,13 +12,9 @@
 
 -include_lib("proper/include/proper.hrl").
 
-key() ->
-    #{ secret := Secret, public := Public } = luke:keypair(),
-    {Public, Secret}.
-
 prop_shared_secret() ->
     %% Alice generates a keypair.
-    ?FORALL({PublicA, SecretA}, key(),
+    ?FORALL({PublicA, SecretA}, keypair(),
         begin
             %% Bob derives a public key and a shared secret from Alice's
             %% public key.
@@ -31,3 +27,8 @@ prop_shared_secret() ->
             %% Verify that the shared secret is the same.
             SharedA =:= SharedB
         end).
+
+%% @private
+keypair() ->
+    #{ secret := Secret, public := Public } = luke:keypair(),
+    {Public, Secret}.
