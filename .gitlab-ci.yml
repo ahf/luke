@@ -1,0 +1,11 @@
+before_script:
+    - erl +V
+
+stages:
+    - test
+
+test-18.3:
+    image: ahfaeroey/otp:18.3
+    stage: test
+    script:
+        - make check
