@@ -4,6 +4,8 @@
 
 #include <stdint.h>
 
+#include "crypto_stream_chacha20.h"
+
 #define ROUNDS 20
 
 typedef uint32_t uint32;
