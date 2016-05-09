@@ -22,7 +22,7 @@
               keypair/0]).
 
 -type public_key() :: binary().
--type secret_key() :: [0 .. 65535].
+-type secret_key() :: binary().
 -type shared()     :: binary().
 
 -type keypair()    :: #{ secret => secret_key(), public => public_key() }.

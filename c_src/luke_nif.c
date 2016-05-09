@@ -18,6 +18,9 @@ static ERL_NIF_TERM enif_luke_keypair(ErlNifEnv *env, int argc, ERL_NIF_TERM con
     (void)argv;
 
     ErlNifBinary public;
+    ErlNifBinary secret;
+
+    poly newhope_secret;
 
     if (argc != 0) {
         return enif_make_badarg(env);
@@ -27,21 +30,22 @@ static ERL_NIF_TERM enif_luke_keypair(ErlNifEnv *env, int argc, ERL_NIF_TERM con
         return make_error_tuple(env, "alloc_binary_failed");
     }
 
-    poly secret;
+    if (! enif_alloc_binary(POLY_BYTES, &secret)) {
+        return make_error_tuple(env, "alloc_binary_failed");
+    }
 
-    newhope_keygen(public.data, &secret);
+    newhope_keygen(public.data, &newhope_secret);
 
-    ERL_NIF_TERM output_secret[PARAM_N];
+    poly_tobytes(secret.data, &newhope_secret);
 
-    for (int i = 0; i < PARAM_N; ++i)
-        output_secret[i] = enif_make_int(env, secret.coeffs[i]);
-
-    return enif_make_tuple2(env, enif_make_binary(env, &public), enif_make_list_from_array(env, output_secret, PARAM_N));
+    return enif_make_tuple2(env, enif_make_binary(env, &public), enif_make_binary(env, &secret));
 }
 
 static ERL_NIF_TERM enif_luke_sharedb(ErlNifEnv *env, int argc, ERL_NIF_TERM const argv[])
 {
     ErlNifBinary public;
+    ErlNifBinary new_public;
+    ErlNifBinary shared;
 
     if (argc != 1) {
         return enif_make_badarg(env);
@@ -54,9 +58,6 @@ static ERL_NIF_TERM enif_luke_sharedb(ErlNifEnv *env, int argc, ERL_NIF_TERM con
     if (public.size != NEWHOPE_SENDABYTES) {
         return enif_make_badarg(env);
     }
-
-    ErlNifBinary new_public;
-    ErlNifBinary shared;
 
     if (! enif_alloc_binary(NEWHOPE_SENDBBYTES, &new_public)) {
         return make_error_tuple(env, "alloc_binary_failed");
@@ -77,17 +78,19 @@ static ERL_NIF_TERM enif_luke_shareda(ErlNifEnv *env, int argc, ERL_NIF_TERM con
         return enif_make_badarg(env);
     }
 
-    unsigned secret_length = 0;
-
-    if (! enif_get_list_length(env, argv[0], &secret_length)) {
-        return enif_make_badarg(env);
-    }
-
-    if (secret_length != PARAM_N) {
-        return enif_make_badarg(env);
-    }
-
+    ErlNifBinary secret;
     ErlNifBinary public;
+    ErlNifBinary shared;
+
+    poly newhope_secret;
+
+    if (! enif_inspect_iolist_as_binary(env, argv[0], &secret)) {
+        return enif_make_badarg(env);
+    }
+
+    if (secret.size != POLY_BYTES) {
+        return enif_make_badarg(env);
+    }
 
     if (! enif_inspect_iolist_as_binary(env, argv[1], &public)) {
         return enif_make_badarg(env);
@@ -97,30 +100,13 @@ static ERL_NIF_TERM enif_luke_shareda(ErlNifEnv *env, int argc, ERL_NIF_TERM con
         return enif_make_badarg(env);
     }
 
-    ErlNifBinary shared;
-
     if (! enif_alloc_binary(32, &shared)) {
         return make_error_tuple(env, "alloc_binary_failed");
     }
 
-    ERL_NIF_TERM list = argv[0];
-    ERL_NIF_TERM head;
-    ERL_NIF_TERM tail;
-    int i = 0;
-    poly secret;
+    poly_frombytes(&newhope_secret, secret.data);
 
-    while (enif_get_list_cell(env, list, &head, &tail)) {
-        int value;
-
-        if (! enif_get_int(env, head, &value)) {
-            return enif_make_badarg(env);
-        }
-
-        secret.coeffs[i++] = value;
-        list = tail;
-    }
-
-    newhope_shareda(shared.data, &secret, public.data);
+    newhope_shareda(shared.data, &newhope_secret, public.data);
 
     return enif_make_binary(env, &shared);
 }
