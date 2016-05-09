@@ -27,6 +27,10 @@
 
 -type keypair()    :: #{ secret => secret_key(), public => public_key() }.
 
+-ifdef(TEST).
+-include_lib("eunit/include/eunit.hrl").
+-endif.
+
 -spec keypair() -> keypair().
 keypair() ->
     {Public, Secret} = luke_nif:keypair(),
@@ -40,3 +44,41 @@ sharedb(PublicA) ->
 -spec shareda(SecretA :: secret_key(), PublicB :: public_key()) -> shared().
 shareda(SecretA, PublicB) ->
     luke_nif:shareda(SecretA, PublicB).
+
+-ifdef(TEST).
+
+keypair_test() ->
+    #{ secret := Secret, public := Public } = keypair(),
+    [
+        ?assertEqual(1792, byte_size(Secret)),
+        ?assertEqual(1792 + 32, byte_size(Public))
+    ].
+
+sharedb_test() ->
+    #{ secret := SecretA, public := PublicA } = keypair(),
+    #{ shared := SharedB, public := PublicB } = sharedb(PublicA),
+    [
+        ?assertEqual(1792, byte_size(SecretA)),
+        ?assertEqual(1792 + 32, byte_size(PublicA)),
+
+        ?assertEqual(1792 + 256, byte_size(PublicB)),
+        ?assertEqual(32, byte_size(SharedB))
+    ].
+
+shareda_test() ->
+    #{ secret := SecretA, public := PublicA } = keypair(),
+    #{ shared := SharedB, public := PublicB } = sharedb(PublicA),
+    SharedA = shareda(SecretA, PublicB),
+    [
+        ?assertEqual(1792, byte_size(SecretA)),
+        ?assertEqual(1792 + 32, byte_size(PublicA)),
+
+        ?assertEqual(1792 + 256, byte_size(PublicB)),
+        ?assertEqual(32, byte_size(SharedB)),
+
+        ?assertEqual(32, byte_size(SharedA)),
+
+        ?assertEqual(SharedA, SharedB)
+    ].
+
+-endif.
