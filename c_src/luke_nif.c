@@ -4,9 +4,9 @@
 
 #include "erl_nif.h"
 
-#include "poly.h"
-#include "newhope.h"
-#include "params.h"
+#include "ref/poly.h"
+#include "ref/newhope.h"
+#include "ref/params.h"
 
 static ERL_NIF_TERM make_error_tuple(ErlNifEnv *env, char *error)
 {
@@ -23,7 +23,7 @@ static ERL_NIF_TERM enif_luke_keypair(ErlNifEnv *env, int argc, ERL_NIF_TERM con
         return enif_make_badarg(env);
     }
 
-    if (! enif_alloc_binary(POLY_BYTES, &public)) {
+    if (! enif_alloc_binary(NEWHOPE_SENDABYTES, &public)) {
         return make_error_tuple(env, "alloc_binary_failed");
     }
 
@@ -34,7 +34,7 @@ static ERL_NIF_TERM enif_luke_keypair(ErlNifEnv *env, int argc, ERL_NIF_TERM con
     ERL_NIF_TERM output_secret[PARAM_N];
 
     for (int i = 0; i < PARAM_N; ++i)
-        output_secret[i] = enif_make_int(env, secret.v[i]);
+        output_secret[i] = enif_make_int(env, secret.coeffs[i]);
 
     return enif_make_tuple2(env, enif_make_binary(env, &public), enif_make_list_from_array(env, output_secret, PARAM_N));
 }
@@ -51,14 +51,14 @@ static ERL_NIF_TERM enif_luke_sharedb(ErlNifEnv *env, int argc, ERL_NIF_TERM con
         return enif_make_badarg(env);
     }
 
-    if (public.size != POLY_BYTES) {
+    if (public.size != NEWHOPE_SENDABYTES) {
         return enif_make_badarg(env);
     }
 
     ErlNifBinary new_public;
     ErlNifBinary shared;
 
-    if (! enif_alloc_binary(POLY_BYTES, &new_public)) {
+    if (! enif_alloc_binary(NEWHOPE_SENDBBYTES, &new_public)) {
         return make_error_tuple(env, "alloc_binary_failed");
     }
 
@@ -93,7 +93,7 @@ static ERL_NIF_TERM enif_luke_shareda(ErlNifEnv *env, int argc, ERL_NIF_TERM con
         return enif_make_badarg(env);
     }
 
-    if (public.size != POLY_BYTES) {
+    if (public.size != NEWHOPE_SENDBBYTES) {
         return enif_make_badarg(env);
     }
 
@@ -116,7 +116,7 @@ static ERL_NIF_TERM enif_luke_shareda(ErlNifEnv *env, int argc, ERL_NIF_TERM con
             return enif_make_badarg(env);
         }
 
-        secret.v[i++] = value;
+        secret.coeffs[i++] = value;
         list = tail;
     }
 
