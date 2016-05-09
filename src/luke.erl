@@ -21,10 +21,6 @@
               shared/0,
               keypair/0]).
 
--ifdef(TEST).
--include_lib("triq/include/triq.hrl").
--endif.
-
 -type public_key() :: binary().
 -type secret_key() :: [0 .. 65535].
 -type shared()     :: binary().
@@ -44,25 +40,3 @@ sharedb(PublicA) ->
 -spec shareda(SecretA :: secret_key(), PublicB :: public_key()) -> shared().
 shareda(SecretA, PublicB) ->
     luke_nif:shareda(SecretA, PublicB).
-
--ifdef(TEST).
-key() ->
-    #{ secret := Secret, public := Public } = keypair(),
-    {Public, Secret}.
-
-prop_shared() ->
-    %% Alice generates a keypair.
-    ?FORALL({PublicA, SecretA}, key(),
-        begin
-            %% Bob derives a public key and a shared secret from Alice's
-            %% public key.
-            #{ shared := SharedB, public := PublicB } = sharedb(PublicA),
-
-            %% Bob sends his public key to Alice who computes a shared
-            %% secret between Bob's public key and her own secret key.
-            SharedA = shareda(SecretA, PublicB),
-
-            %% Verify that the shared secret is the same.
-            SharedA =:= SharedB
-        end).
--endif.
