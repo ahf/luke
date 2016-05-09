@@ -44,5 +44,5 @@ AliceSharedSecret =:= BobSharedSecret.
 
 
 <table width="100%" border="0" summary="list of modules">
-<tr><td><a href="https://lab.baconsvin.org/ahf/luke/blob/develop/doc/luke.md" class="module">luke</a></td></tr></table>
+<tr><td><a href="https://lab.baconsvin.org/ahf/luke/blob/master/doc/luke.md" class="module">luke</a></td></tr></table>
 
