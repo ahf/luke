@@ -1,0 +1,31 @@
+@title Luke
+@version 1.2.0
+@author Alexander Færøy <ahf@0x90.dk>
+
+@doc
+
+Luke is an Erlang NIF for the post-quantum key exchange: A New Hope.
+
+For more information about A New Hope, including the paper itself, see <a
+href="https://github.com/tpoeppelmann/newhope">github.com/tpoeppelmann/newhope</a>.
+
+== Example Usage ==
+
+1. Alice generates a new keypair and sends her public key to Bob.
+
+   <pre lang="erlang">#{ secret := AliceSecretKey, public := AlicePublicKey } = luke:keypair().</pre>
+
+2. Bob uses Alice's public key to compute the shared secret and a public key that he then sends back to Alice.
+
+   <pre lang="erlang">#{ shared := BobSharedSecret, public := BobPublicKey } = luke:sharedb(AlicePublicKey).</pre>
+
+3. Alice computes the shared secret using her own secret key and Bob's public
+   key.
+
+   <pre lang="erlang">AliceSharedSecret = luke:shareda(AliceSecretKey, BobPublicKey).</pre>
+
+4. You can now verify that the shared secret is the same.
+
+   <pre lang="erlang">AliceSharedSecret =:= BobSharedSecret.</pre>
+
+@end
