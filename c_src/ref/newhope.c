@@ -2,6 +2,7 @@
 #include "randombytes.h"
 #include "error_correction.h"
 #include "fips202.h"
+
 #include "newhope.h"
 
 static void encode_a(unsigned char *r, const poly *pk, const unsigned char *seed)
@@ -56,6 +57,7 @@ void newhope_keygen(unsigned char *send, poly *sk)
   unsigned char noiseseed[32];
 
   randombytes(seed, NEWHOPE_SEEDBYTES);
+  sha3256(seed, seed, NEWHOPE_SEEDBYTES); /* Don't send output of system RNG */
   randombytes(noiseseed, 32);
 
   gen_a(&a, seed);
