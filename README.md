@@ -8,7 +8,8 @@ __Authors:__ Alexander Færøy ([`ahf@0x90.dk`](mailto:ahf@0x90.dk)).
 
 Luke is an Erlang NIF for the post-quantum key exchange: A New Hope.
 
-For more information about A New Hope, including the paper itself, see [github.com/tpoeppelmann/newhope](https://github.com/tpoeppelmann/newhope).
+For more information about A New Hope, including the paper itself, see [github.com/tpoeppelmann/newhope](https://github.com/tpoeppelmann/newhope)
+and [cryptojedi.org](https://cryptojedi.org/crypto/#newhope).
 
 
 ### <a name="Example_Usage">Example Usage</a> ###

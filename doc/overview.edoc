@@ -7,7 +7,8 @@
 Luke is an Erlang NIF for the post-quantum key exchange: A New Hope.
 
 For more information about A New Hope, including the paper itself, see <a
-href="https://github.com/tpoeppelmann/newhope">github.com/tpoeppelmann/newhope</a>.
+href="https://github.com/tpoeppelmann/newhope">github.com/tpoeppelmann/newhope</a>
+and <a href="https://cryptojedi.org/crypto/#newhope">cryptojedi.org</a>.
 
 == Example Usage ==
 
