@@ -9,6 +9,10 @@ typedef struct {
 } poly __attribute__ ((aligned (32)));
 
 void poly_uniform(poly *a, const unsigned char *seed);
+
+/* From the Tor implementation */
+void poly_tor_uniform(poly *a, const unsigned char *seed);
+
 void poly_getnoise(poly *r, unsigned char *seed, unsigned char nonce);
 void poly_add(poly *r, const poly *a, const poly *b);
 

@@ -19,10 +19,15 @@ static ERL_NIF_TERM enif_luke_keypair(ErlNifEnv *env, int argc, ERL_NIF_TERM con
 
     ErlNifBinary public;
     ErlNifBinary secret;
+    int tor = 0;
 
     poly newhope_secret;
 
-    if (argc != 0) {
+    if (argc != 1) {
+        return enif_make_badarg(env);
+    }
+
+    if (! enif_get_int(env, argv[0], &tor)) {
         return enif_make_badarg(env);
     }
 
@@ -34,7 +39,7 @@ static ERL_NIF_TERM enif_luke_keypair(ErlNifEnv *env, int argc, ERL_NIF_TERM con
         return make_error_tuple(env, "alloc_binary_failed");
     }
 
-    newhope_keygen(public.data, &newhope_secret);
+    newhope_keygen(public.data, &newhope_secret, tor);
 
     poly_tobytes(secret.data, &newhope_secret);
 
@@ -46,12 +51,17 @@ static ERL_NIF_TERM enif_luke_sharedb(ErlNifEnv *env, int argc, ERL_NIF_TERM con
     ErlNifBinary public;
     ErlNifBinary new_public;
     ErlNifBinary shared;
+    int tor = 0;
 
-    if (argc != 1) {
+    if (argc != 2) {
         return enif_make_badarg(env);
     }
 
     if (! enif_inspect_iolist_as_binary(env, argv[0], &public)) {
+        return enif_make_badarg(env);
+    }
+
+    if (! enif_get_int(env, argv[1], &tor)) {
         return enif_make_badarg(env);
     }
 
@@ -67,7 +77,7 @@ static ERL_NIF_TERM enif_luke_sharedb(ErlNifEnv *env, int argc, ERL_NIF_TERM con
         return make_error_tuple(env, "alloc_binary_failed");
     }
 
-    newhope_sharedb(shared.data, new_public.data, public.data);
+    newhope_sharedb(shared.data, new_public.data, public.data, tor);
 
     return enif_make_tuple2(env, enif_make_binary(env, &shared), enif_make_binary(env, &new_public));
 }
@@ -112,8 +122,8 @@ static ERL_NIF_TERM enif_luke_shareda(ErlNifEnv *env, int argc, ERL_NIF_TERM con
 }
 
 static ErlNifFunc nif_functions[] = {
-    { "keypair", 0, enif_luke_keypair, ERL_NIF_DIRTY_JOB_CPU_BOUND },
-    { "sharedb", 1, enif_luke_sharedb, ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    { "keypair", 1, enif_luke_keypair, ERL_NIF_DIRTY_JOB_CPU_BOUND },
+    { "sharedb", 2, enif_luke_sharedb, ERL_NIF_DIRTY_JOB_CPU_BOUND },
     { "shareda", 2, enif_luke_shareda, ERL_NIF_DIRTY_JOB_CPU_BOUND },
 };
 

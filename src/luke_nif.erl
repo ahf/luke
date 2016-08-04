@@ -10,8 +10,8 @@
 -module(luke_nif).
 
 %% Private API.
--export([keypair/0,
-         sharedb/1,
+-export([keypair/1,
+         sharedb/2,
          shareda/2]).
 
 %% Initializer.
@@ -39,11 +39,11 @@ init() ->
     erlang:load_nif(File, 0).
 
 %% @private
-keypair() ->
+keypair(_) ->
     ?nif_stub.
 
 %% @private
-sharedb(_) ->
+sharedb(_, _) ->
     ?nif_stub.
 
 %% @private

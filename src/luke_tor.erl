@@ -5,10 +5,21 @@
 %%%
 %%% ----------------------------------------------------------------------------
 %%% @author Alexander Færøy <ahf@0x90.dk>
-%%% @doc
+%%% @doc New Hope Tor implementation
+%%%
+%%% This module contains the exact same API as the luke module, but uses the
+%%% Tor implementation of New Hope instead of the reference implementation.
+%%%
+%%% The Tor implementation of New Hope uses a different, constant-time,
+%%% generation of the polynomial generated in the keypair/0 and sharedb/1
+%%% functions.
+%%%
+%%% This module should only be used if you are planning on interfacing against
+%%% the Tor network.
+%%%
 %%% @end
 %%% ----------------------------------------------------------------------------
--module(luke).
+-module(luke_tor).
 
 %% Public API.
 -export([keypair/0,
@@ -42,7 +53,7 @@
 %% @end
 -spec keypair() -> keypair().
 keypair() ->
-    {Public, Secret} = luke_nif:keypair(0),
+    {Public, Secret} = luke_nif:keypair(1),
     #{ public => Public, secret => Secret }.
 
 %% @doc Generate shared secret and ephemeral public key from a public key.
@@ -63,7 +74,7 @@ keypair() ->
 %% @end
 -spec sharedb(PublicA :: public_key()) -> #{ shared => shared(), public => public_key() }.
 sharedb(PublicA) ->
-    {Shared, PublicB} = luke_nif:sharedb(PublicA, 0),
+    {Shared, PublicB} = luke_nif:sharedb(PublicA, 1),
     #{ shared => Shared, public => PublicB }.
 
 %% @doc Compute the shared secret from a secret key and a public key.

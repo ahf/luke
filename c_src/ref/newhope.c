@@ -42,15 +42,18 @@ static void decode_b(poly *b, poly *c, const unsigned char *r)
   }
 }
 
-static void gen_a(poly *a, const unsigned char *seed)
+static void gen_a(poly *a, const unsigned char *seed, int tor)
 {
-    poly_uniform(a,seed);
+    if (tor)
+        poly_tor_uniform(a, seed);
+    else
+        poly_uniform(a, seed);
 }
 
 
 // API FUNCTIONS 
 
-void newhope_keygen(unsigned char *send, poly *sk)
+void newhope_keygen(unsigned char *send, poly *sk, int tor)
 {
   poly a, e, r, pk;
   unsigned char seed[NEWHOPE_SEEDBYTES];
@@ -60,7 +63,7 @@ void newhope_keygen(unsigned char *send, poly *sk)
   sha3256(seed, seed, NEWHOPE_SEEDBYTES); /* Don't send output of system RNG */
   randombytes(noiseseed, 32);
 
-  gen_a(&a, seed);
+  gen_a(&a, seed, tor);
 
   poly_getnoise(sk,noiseseed,0);
   poly_ntt(sk);
@@ -75,7 +78,7 @@ void newhope_keygen(unsigned char *send, poly *sk)
 }
 
 
-void newhope_sharedb(unsigned char *sharedkey, unsigned char *send, const unsigned char *received)
+void newhope_sharedb(unsigned char *sharedkey, unsigned char *send, const unsigned char *received, int tor)
 {
   poly sp, ep, v, a, pka, c, epp, bp;
   unsigned char seed[NEWHOPE_SEEDBYTES];
@@ -84,7 +87,7 @@ void newhope_sharedb(unsigned char *sharedkey, unsigned char *send, const unsign
   randombytes(noiseseed, 32);
 
   decode_a(&pka, seed, received);
-  gen_a(&a, seed);
+  gen_a(&a, seed, tor);
 
   poly_getnoise(&sp,noiseseed,0);
   poly_ntt(&sp);
