@@ -10,6 +10,9 @@ For more information about A New Hope, including the paper itself, see <a
 href="https://github.com/tpoeppelmann/newhope">github.com/tpoeppelmann/newhope</a>
 and <a href="https://cryptojedi.org/crypto/#newhope">cryptojedi.org</a>.
 
+Luke also ships with optional support for the Tor implementation of A New Hope.
+Use the `luke_tor` module instead of `luke` if you have a need for that.
+
 == Example Usage ==
 
 1. Alice generates a new keypair and sends her public key to Bob.
