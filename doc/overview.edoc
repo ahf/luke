@@ -11,7 +11,7 @@ href="https://github.com/tpoeppelmann/newhope">github.com/tpoeppelmann/newhope</
 and <a href="https://cryptojedi.org/crypto/#newhope">cryptojedi.org</a>.
 
 Luke also ships with optional support for the Tor implementation of A New Hope.
-Use the `luke_tor` module instead of `luke` if you have a need for that.
+Use the luke_tor module instead of luke if you have a need for that.
 
 == Example Usage ==
 

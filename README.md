@@ -12,13 +12,18 @@ For more information about A New Hope, including the paper itself, see [github.c
 and [cryptojedi.org](https://cryptojedi.org/crypto/#newhope).
 
 Luke also ships with optional support for the Tor implementation of A New Hope.
-Use the `luke_tor` module instead of `luke` if you have a need for that.
+Use the luke_tor module instead of luke if you have a need for that.
 
-== Example Usage ==
 
-1. Alice generates a new keypair and sends her public key to Bob.<pre lang="erlang">#{ secret := AliceSecretKey, public := AlicePublicKey } = luke:keypair().</pre>
+### <a name="Example_Usage">Example Usage</a> ###
 
-2. Bob uses Alice`s public key to compute the shared secret and a public key that he then sends back to Alice.
+1. Alice generates a new keypair and sends her public key to Bob.
+
+```erlang
+#{ secret := AliceSecretKey, public := AlicePublicKey } = luke:keypair().
+```
+
+2. Bob uses Alice's public key to compute the shared secret and a public key that he then sends back to Alice.
 
 ```erlang
 #{ shared := BobSharedSecret, public := BobPublicKey } = luke:sharedb(AlicePublicKey).
