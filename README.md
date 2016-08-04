@@ -2,7 +2,7 @@
 
 # Luke #
 
-__Version:__ 1.3.0
+__Version:__ 1.3.0 (New Hope: 20160803)
 
 __Authors:__ Alexander Færøy ([`ahf@0x90.dk`](mailto:ahf@0x90.dk)).
 
