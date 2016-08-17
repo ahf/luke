@@ -3,9 +3,14 @@
 
 #include "batcher.h"
 
-static int discardtopoly(poly* a, uint16_t *x)
+static int discardtopoly(poly* a, unsigned char *buf, unsigned int nblocks)
 {
-  int32_t i, r=0;
+  int r=0;
+  unsigned int i;
+  uint16_t x[SHAKE128_RATE*nblocks/2];
+
+  for(i=0;i<SHAKE128_RATE*nblocks/2;i++)
+    x[i] = buf[2*i] | (uint16_t)buf[2*i+1] << 8; //handle endianess
 
   for(i=0;i<16;i++)
   batcher84(x+i);
@@ -18,7 +23,7 @@ static int discardtopoly(poly* a, uint16_t *x)
   // If we are, copy coefficients to polynomial:
   for(i=0;i<PARAM_N;i++)
     a->coeffs[i] = x[i];
-  
+
   return 0;
 }
 
@@ -34,5 +39,5 @@ void poly_tor_uniform(poly *a, const unsigned char *seed)
   {
     shake128_squeezeblocks((unsigned char *) buf, nblocks, state);
   }
-  while (discardtopoly(a, (uint16_t *)buf));
+  while (discardtopoly(a, buf, nblocks));
 }
